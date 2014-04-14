@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>
+		PayU
+	</name>
+	<settings>
+		<variable>payu_merchant</variable>
+		<name>Идентификатор мерчанта</name>
+	</settings>
+	<settings>
+		<variable>payu_secretkey</variable>
+		<name>Секретный ключ мерчанта</name>
+	</settings>
+	
+	<settings>
+		<variable>payu_debug</variable>
+		<name>Режим отладки</name>
+		<options>
+			<name>Выключен</name>
+			<value>0</value>
+		</options>
+		<options>
+			<name>Включен</name>
+			<value>1</value>
+		</options>
+	</settings>
+	<settings>
+		<variable>payu_testorder</variable>
+		<name>Тестовой операции</name>
+		<options>
+			<name>Выключен</name>
+			<value>FALSE</value>
+		</options>
+		<options>
+			<name>Включен</name>
+			<value>TRUE</value>
+		</options>
+	</settings>
+	<settings>
+		<variable>payu_language</variable>
+		<name>Язык платежной страницы</name>
+		<options>
+			<name>RU</name>
+			<value>RU</value>
+		</options>
+		<options>
+			<name>EN</name>
+			<value>EN</value>
+		</options>
+	</settings>	
+	
+	
+	
+</module>
