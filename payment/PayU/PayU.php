@@ -43,7 +43,7 @@ class PayU extends Simpla
 			$ORDER_PRICE[] = $this->money->convert($purchase->price, $payment_method->currency_id, false);
 			$ORDER_QTY[] = $purchase->amount;
 			$ORDER_VAT[] = 0;
-			$total_price += $this->money->convert($purchase->price, $payment_method->currency_id, false);
+			$total_price += $this->money->convert($purchase->price, $payment_method->currency_id, false)*$purchase->amount;
 		}
 			
 
@@ -75,6 +75,10 @@ class PayU extends Simpla
 		$option['PRICES_CURRENCY'] 	= $currency;  //Валюта, в которой будет отображаться цены товаров и стоимость доставки
 		$option['DISCOUNT'] 		= 0; //Скидка на весь заказ в валюте PRICES_CURRENCY. Формат: положительное число, не более двух разрядов после точки. (*Необязательное поле). 
 		if($order->discount > 0)
+		{
+			$option['DISCOUNT'] = round($this->money->convert($total_price-$order->total_price, $payment_method->currency_id, false), 2);
+		}
+		elseif($order->coupon_discount > 0)
 		{
 			$option['DISCOUNT'] = round($this->money->convert($total_price-$order->total_price, $payment_method->currency_id, false), 2);
 		}
