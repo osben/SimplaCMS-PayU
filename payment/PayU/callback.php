@@ -21,8 +21,6 @@ $order = $simpla->orders->get_order(intval($order_id));
 if(empty($order))
 	die('Оплачиваемый заказ не найден');
 
-if($order->paid)
-	die('Этот заказ уже оплачен');
 
 $method = $simpla->payment->get_payment_method(intval($order->payment_method_id));
 if(empty($method))
@@ -64,16 +62,22 @@ if ( $_POST["HASH"] != $sign )
 	die("Контрольная подпись не верна");
 
 
-$datetime = date("YmdHis");
-$sign_return = '';
-$sign_return .= strlen($arr["IPN_PID"][0]) . $arr["IPN_PID"][0];
-$sign_return .= strlen($arr["IPN_PNAME"][0]) . $arr["IPN_PNAME"][0];
-$sign_return .= strlen($arr["IPN_DATE"]) . $arr["IPN_DATE"];
-$sign_return .= strlen($arr["DATE"]) . $datetime;
-$sign_return = hash_hmac('md5', $sign_return, $settings['payu_secretkey']);
-echo "<!-- <EPAYMENT>".$datetime."|".$sign_return."</EPAYMENT> -->";
 
-if($_POST['ORDERSTATUS'] == 'TEST' || $_POST['ORDERSTATUS'] == 'COMPLETE')
+$datetime = date("YmdHis");
+$ipnPid = isset($arr['IPN_PID']) ? $arr['IPN_PID'] : '';
+$ipnName = isset($arr['IPN_PNAME']) ? $arr['IPN_PNAME'] : '';
+$ipnDate = isset($arr['IPN_DATE']) ? $arr['IPN_DATE'] : '';
+
+$sign_return = '';
+$sign_return .= strlen($ipnPid[0]) . $ipnPid[0];
+$sign_return .= strlen($ipnName[0]) . $ipnName[0];
+$sign_return .= strlen($ipnDate) . $ipnDate;
+$sign_return .= strlen($datetime) . $datetime;
+$sign_return = hash_hmac('md5', $sign_return, $settings['payu_secretkey']);
+$result = '<EPAYMENT>' . $datetime . '|' . $sign_return . '</EPAYMENT>';
+echo $result;
+
+if(($_POST['ORDERSTATUS'] == 'TEST' || $_POST['ORDERSTATUS'] == 'COMPLETE') && !$order->paid)
 {
 	// Установим статус оплачен
 	$simpla->orders->update_order(intval($order->id), array('paid'=>1));
